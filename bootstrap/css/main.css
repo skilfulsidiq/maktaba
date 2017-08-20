@@ -1,0 +1,58 @@
+  body {
+      padding: 50px;
+  }
+  /*header*/
+
+  #headerWrapper {
+      position: relative;
+      top: 30px;
+      padding: 0;
+      margin: 10px;
+      /*      overflow: hidden;*/
+      height: 600px;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: top-center;
+      background-attachment: fixed;
+  }
+  /*Carousel stylling*/
+
+  #nav {
+      height: 0px;
+  }
+
+  .caro {
+      height: 450px;
+  }
+
+  .caro img {
+      width: 95%;
+      margin: 10px;
+      height: 400px;
+  }
+  /*  product Img*/
+
+  .img-pro {
+      width: auto;
+      height: 180px;
+  }
+
+  #footer {
+      margin: 50px
+  }
+
+  img.details {
+      width: 33%;
+      margin: 15px auto;
+  }
+  /*Admin styles*/
+  /*Admin brand table*/
+
+  .table-auto {
+      width: auto;
+      margin: 0 auto;
+  }
+  /*ADD product button*/
+  #add-product-btn{
+    margin-top: -35px;
+  }
