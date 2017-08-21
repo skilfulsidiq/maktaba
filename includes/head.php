@@ -7,7 +7,7 @@
         <link rel="stylesheet" type="text/css" href="bootstrap/css/main.css">
 		<meta name="viewport" content="width=device-width initial-scale=1">
 		<!--JS  -->
-        <script src="bootstrap/js/jquery-3.2.1.min.js" type="text/javascript"></script>
+        <script src="bootstrap/js/jquery-3.2.1.js" type="text/javascript"></script>
         <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 		<!--<script src="bootstrap/js/bootstrap.js" type="text/javascript"></script>-->
 

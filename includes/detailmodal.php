@@ -23,22 +23,22 @@ $size_array = explode(',',$sizestring);
             <div class="modal-content">
                 <div class="modal-header">
                     <button class="close" type="button" onclick="closeModal()" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title text-center"><?= $product['title']; ?></h4>
+                    <h4 class="modal-title text-center"><?php echo $product['title'];?></h4>
                 </div>
                 <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6 details">
                             <div class="center-block">
-                                <img src="<?= $product['image']; ?>" alt="<?= $product['title']; ?>" class="details img-responsive" />
+                                <img src="<?php echo $product['image']; ?>" alt="<?= $product['title']; ?>" class="details img-responsive" />
                             </div>
                         </div>
                             <div class="col-sm-6">
                             <h4>Details</h4>
-                                <p><?=nl2br($product['description']); ?></p>
+                                <p><?php echo  nl2br($product['description']); ?></p>
                                 <hr>
-                                <p>Price: #<?=$product['price'];?></p>
-                                <p>Brand:<?=$brand['brand'];?> </p>
+                                <p>Price: #<?php echo $product['price'];?></p>
+                                <p>Brand:<?php echo $brand['brand'];?> </p>
                                 <form action="add_cart.php" method="post">
                                 <div class="form-group">
                                     <div class="col-xs-3">
@@ -75,7 +75,7 @@ $size_array = explode(',',$sizestring);
 
     </div>
     <script>
-      function close(){
+      function closeModal(){
         jQuery('#details-modal').modal('hide');
         setTimeout(function(){
           jQuery('#details-modal').remove();

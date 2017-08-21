@@ -3,15 +3,32 @@
   include 'includes/head.php';
   include 'includes/nav.php';
 
-  if (isset($_GET['add'])) {
-
+  if (isset($_GET['add'])|| isset($_GET['edit'])) {
     //query to fecth brand
     $brandsql = $conn->query("SELECT * FROM brand ORDER BY brand");
     $parentsql = $conn->query("SELECT * FROM categories WHERE parent = 0");
+    //for edit
+    $title = ((isset($_POST['title']) && $_POST['title'] != '' )?sanitize($_POST['title']):'');
+    $brand = ((isset($_POST['brand']) && !empty($_POST['brand']))?sanitize($_POST['brand']):'');
+    $parent = ((isset($_POST['parent']) && !empty($_POST['parent']))?sanitize($_POST['parent']):'');
+    $category = ((isset($_POST['child']) && !empty($_POST['child']))?sanitize($_POST['child']):'');
+    if (isset($_GET['edit'])) {
+        $edit_id = (int)$_GET['edit'];
+        //populate the input field for edit
+        $editsql = $conn->query("SELECT * FROM product WHERE id = '$edit_id'");
+        $product = mysqli_fetch_assoc($editsql);
+        $category = ((isset($_POST['child']) && $_POST['child'] !='')?sanitize($_POST['child']):$product['category']);
+        $title = ((isset($_POST['title']) && $_POST['title'] != '' )?sanitize($_POST['title']):$product['title']);
+        $brand = ((isset($_POST['brand']) && $_POST['brand'] != '' )?sanitize($_POST['brand']):$product['brand_id']);
+        //parent query for category
+        $parentquery = $conn->query("SELECT * FROM categories WHERE id='$category'");
+        $parentresult = mysqli_fetch_assoc($parentquery);
+        $parent = ((isset($_POST['parent']) && $_POST['parent'] != '' )?sanitize($_POST['parent']):$parentresult['parent']);
+    }
     //When Save Changes Button is clikced in the quantity and size modal
     if($_POST){
-      $title = sanitize($_POST['title']);
-      $brand = sanitize($_POST['brand']);
+
+
       $category = sanitize($_POST['child']);
       $price = sanitize($_POST['price']);
       $list_price = sanitize($_POST['list_price']);
@@ -75,8 +92,8 @@
       }else{
         //upload files and insert details
         move_uploaded_file($location, $uploadPath);
-        $insertsql = "INSERT INTO product(`title`,`price`,`list_price`,`brand`,`category`,`image`,`decription`,'size')
-        VALUES('$title','$price','$list_price','$brand','$category','$dbpath','$decription','size')";
+        $insertsql = "INSERT INTO product(title,price,list_price,brand,category,image,decription,size)
+        VALUES('$title','$price','$list_price','$brand','$category','$dbpath','$decription','$size')";
         $conn->query($insertsql);
         header('LOCATION:product.php');
       }
@@ -85,20 +102,20 @@
 
   ?>
   <!-- ADD PRODUCT -->
-  <h2 class="text-center">Add Product</h2><hr>
-  <form action="product.php?add=1" method="post" enctype="multipart/form-data">
+  <h2 class="text-center"><?=((isset($_GET['edit']))?'Edit ':'Add A New'); ?> Product</h2><hr>
+  <form action="product.php?<?=((isset($_GET['edit']))?'edit='.$edit_id:'add=1'); ?>" method="post" enctype="multipart/form-data">
     <!-- title -->
     <div class="form-group col-md-3">
       <label for="title">Title:* </label>
-      <input type="text" name="title" class="form-control" id="title" value="<?=((isset($_POST['title']))?$_POST['title']:''); ?>">
+      <input type="text" name="title" class="form-control" id="title" value="<?=$title; ?>">
     </div>
     <!--Brand  -->
     <div class="form-group col-md-3">
       <label for="brand">Brand*: </label>
       <select class="form-control" id="brand" name="brand">
-        <option value=""<?=((isset($_POST['brand']) && $_POST['brand'] == '')?' selected':''); ?>></option>
-        <?php while($brand = mysqli_fetch_assoc($brandsql)): ?>
-        <option value="<?=$brand['id']; ?>"<?=((isset($_POST['brand']) && $_POST['brand'] == $brand['id'])?' selected':''); ?>><?=$brand['brand']; ?></option>
+        <option value=""<?=(($brand == '')?' selected':''); ?>></option>
+        <?php while($b = mysqli_fetch_assoc($brandsql)): ?>
+        <option value="<?=$b['id']; ?>"<?=(($brand == $b['id'])?' selected':''); ?>><?=$b['brand']; ?></option>
         <?php endwhile; ?>
       </select>
     </div>
@@ -106,15 +123,15 @@
     <div class="form-group col-md-3">
       <label for="parent">Parent categories*: </label>
         <select class="form-control" id="parent" name="parent">
-          <option value=""<?=((isset($_POST['parent']) && $_POST['parent'] == '')?' selected':''); ?>></option>
-          <?php while($parent = mysqli_fetch_assoc($parentsql)): ?>
-          <option value="<?=$parent['id']; ?>"<?=((isset($_POST['parent']) && $_POST['parent'] == $parent['id'])?' select':''); ?>><?=$parent['category']; ?></option>
+          <option value=""<?=(($parent == '')?' selected':''); ?>></option>
+          <?php while($p = mysqli_fetch_assoc($parentsql)): ?>
+          <option value="<?=$p['id']; ?>"<?=(($parent == $p['id'])?' selected':''); ?>><?php echo $p['category']; ?></option>
           <?php endwhile; ?>
         </select>
     </div>
     <!--Child category  -->
     <div class="form-group col-md-3">
-      <label for="child">Child categories*: </label>
+      <label for="child">Child categories: </label>
       <select class="form-control" id="child" name="child">
       </select>
     </div>
@@ -150,7 +167,8 @@
     </div>
     <!-- ADD Button -->
     <div class="form-group pull-right">
-      <input type="submit" name="addProduct" value="Add Product" class="form-control btn btn-primary">
+      <a href="product.php" class="btn btn-default">Cancel</a>
+      <input type="submit" name="addProduct" value="<?=((isset($_GET['edit']))?'Edit ':'Add ');?>Product" class="btn btn-<?=((isset($_GET['edit']))?'success':'primary');?>">
     </div>
     <div class="clearfix"></div>
   </form>

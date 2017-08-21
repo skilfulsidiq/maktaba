@@ -6,8 +6,7 @@
     </footer>
     <script>
        function detailsmodal(id){
-            // alert (id);
-        var data = {id : id};
+        var data = {"id" : id};
         jQuery.ajax({
             url: '/ecommerce/includes/detailmodal.php',
             method : 'POST',

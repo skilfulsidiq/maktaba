@@ -20,7 +20,7 @@
       jQuery.ajax({
         url : '/ecommerce/admin/parse/child_category.php';
         type : 'POST',
-        data : {parentID : parentID},
+        data : {"parentID" : parentID},
         success:function(data){
           jQuery('#child').html(data);
         },
