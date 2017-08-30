@@ -56,3 +56,8 @@
   #add-product-btn{
     margin-top: -35px;
   }
+  /* saved image edit */
+  .saved-image img{
+      width:100px;
+      height: auto;
+  }

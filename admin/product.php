@@ -3,6 +3,13 @@
   include 'includes/head.php';
   include 'includes/nav.php';
 
+  $dbpath = '';
+  //delete
+  if(isset($_GET['delete'])){
+    $id = sanitize($_GET['delete']);
+    $conn->query("UPDATE product SET deleted = 1 WHERE id='$id'");
+    header('LOCATION:product.php');
+  }
   if (isset($_GET['add'])|| isset($_GET['edit'])) {
     //query to fecth brand
     $brandsql = $conn->query("SELECT * FROM brand ORDER BY brand");
@@ -12,14 +19,48 @@
     $brand = ((isset($_POST['brand']) && !empty($_POST['brand']))?sanitize($_POST['brand']):'');
     $parent = ((isset($_POST['parent']) && !empty($_POST['parent']))?sanitize($_POST['parent']):'');
     $category = ((isset($_POST['child']) && !empty($_POST['child']))?sanitize($_POST['child']):'');
+    $price = ((isset($_POST['price']) && !empty($_POST['price']))?sanitize($_POST['price']):'');
+    $list_price = ((isset($_POST['list_price']) && !empty($_POST['list_price']))?sanitize($_POST['list_price']):'');
+    $description = ((isset($_POST['description']) && !empty($_POST['description']))?sanitize($_POST['description']):'');
+    $sizes = ((isset($_POST['size']) && $_POST['size'] != '' )?sanitize($_POST['size']):'');
+    $sizes = rtrim($sizes,',');
+    $saved_image = '';
     if (isset($_GET['edit'])) {
         $edit_id = (int)$_GET['edit'];
         //populate the input field for edit
         $editsql = $conn->query("SELECT * FROM product WHERE id = '$edit_id'");
         $product = mysqli_fetch_assoc($editsql);
+        //delete image in edit session
+        if(isset($_GET['delete_image'])){
+          $image_url = $_SERVER['DOCUMENT_ROOT'].$product['image'];
+          unset($image_url);
+          $conn->query("UPDATE product SET image = '' WHERE id = '$edit_id'");
+          // header('location:product.php?edit .= $edit_id');
+        }
+        //edit product
         $category = ((isset($_POST['child']) && $_POST['child'] !='')?sanitize($_POST['child']):$product['category']);
         $title = ((isset($_POST['title']) && $_POST['title'] != '' )?sanitize($_POST['title']):$product['title']);
         $brand = ((isset($_POST['brand']) && $_POST['brand'] != '' )?sanitize($_POST['brand']):$product['brand_id']);
+        $price = ((isset($_POST['price']) && $_POST['price'] !='')?sanitize($_POST['price']):$product['price']);
+        $list_price = ((isset($_POST['list_price']) && $_POST['list_price'] !='')?sanitize($_POST['list_price']):$product['list_price']);
+        $description = ((isset($_POST['description']) && $_POST['description'] !='')?sanitize($_POST['description']):$product['description']);
+        $sizes = ((isset($_POST['size']) && $_POST['size'] != '' )?sanitize($_POST['size']):$product['size']);
+        $sizes = rtrim($sizes,',');
+        $saved_image = (($product['image'] !='')?$product['image']:'');
+        $dbpath = $saved_image;
+
+        if(!empty($sizes)){
+          $sizeString = sanitize($sizes);
+          $sizeString = rtrim($sizeString,',');
+          $sizeArray = explode(',',$sizeString);
+          $sArray =array();
+          $qArray = array();
+          foreach ($sizeArray as $ss) {
+            $s = explode(':',$ss);
+            $sArray = $s[0];
+            $qArray = $s[1];
+          }
+        }else{$sizeArray = array();}
         //parent query for category
         $parentquery = $conn->query("SELECT * FROM categories WHERE id='$category'");
         $parentresult = mysqli_fetch_assoc($parentquery);
@@ -27,28 +68,10 @@
     }
     //When Save Changes Button is clikced in the quantity and size modal
     if($_POST){
-
-
-      $category = sanitize($_POST['child']);
-      $price = sanitize($_POST['price']);
-      $list_price = sanitize($_POST['list_price']);
-      $size = sanitize($_POST['sizes']);
-      $decription = sanitize($_POST['description']);
       $dbpath = '';
-      if(!empty($_POST['sizes'])){
-        $sizeString = sanitize($_POST['sizes']);
-        $sizeString = rtrim($sizeArray,',');
-        $sizeArray = explode(',',$sizeString);
-        $sArray =array();
-        $qArray = array();
-        foreach ($sizeArray as $ss) {
-          $s = explode(':',$ss);
-          $sArray = $s[0];
-          $qArray = $s[1];
-        }
-      }else{$sizeArray = array();}
+      $errors=array();
       //form validation
-      $required = array('title','brand','price','parent');//,'child'
+      $required = array('title','brand','price','parent','child','size');
       foreach ($required as $field) {
         if($_POST[$field]==''){
           $errors[] = 'All fields with Astrisk are required';
@@ -58,7 +81,7 @@
       }
       //file upload validation
     if(!empty($_FILES)){
-        var_dump($_FILES);
+       // var_dump($_FILES);
         $photo= $_FILES['photo'];
         $name = $photo['name'];
         $nameArray = explode('.',$name);
@@ -70,9 +93,10 @@
         $location = $photo['tmp_name'];
         $fileSize = $photo['size'];
         $allowedImage = array('jpg','PNG','gif','jpeg','png');
-        $uploadname = md5(microtime()).'.'.$fileExt;
+        $uploadname = $name;
+        // $uploadname = md5(microtime()).'.'.$fileExt;
           $uploadPath = BASEURL.'images/products/'.$uploadname;
-        $dbpath = '/ecommerce/images/products/'.$uploadPath;
+        $dbpath = '/ecommerce/images/products/'.$uploadname;
         if($mineType != 'image'){
           $errors[] = "File must be an image";
         }
@@ -92,8 +116,13 @@
       }else{
         //upload files and insert details
         move_uploaded_file($location, $uploadPath);
-        $insertsql = "INSERT INTO product(title,price,list_price,brand,category,image,decription,size)
-        VALUES('$title','$price','$list_price','$brand','$category','$dbpath','$decription','$size')";
+        $insertsql = "INSERT INTO product(title,price,list_price,brand_id,category,image,description,size)
+        VALUES('$title','$price','$list_price','$brand','$category','$dbpath','$description','$sizes')";
+        if(isset($_GET['edit'])){
+          $insertsql = "UPDATE product SET title='$title',price='$price',list_price ='$list_price',brand_id='$brand',
+          category='$category',image='$dbpath',description='$description',size='$sizes' WHERE id = '$edit_id'";
+        }
+
         $conn->query($insertsql);
         header('LOCATION:product.php');
       }
@@ -125,45 +154,50 @@
         <select class="form-control" id="parent" name="parent">
           <option value=""<?=(($parent == '')?' selected':''); ?>></option>
           <?php while($p = mysqli_fetch_assoc($parentsql)): ?>
-          <option value="<?=$p['id']; ?>"<?=(($parent == $p['id'])?' selected':''); ?>><?php echo $p['category']; ?></option>
+          <option value="<?=$p['id']; ?>"<?=(($parent == $p['id'])?' selected':''); ?>><?=$p['category']; ?></option>
           <?php endwhile; ?>
         </select>
     </div>
     <!--Child category  -->
     <div class="form-group col-md-3">
-      <label for="child">Child categories: </label>
+      <label for="child">Child categories*: </label>
       <select class="form-control" id="child" name="child">
       </select>
     </div>
     <!-- Price -->
     <div class="form-group col-md-3">
       <label for="price">Price*: </label>
-      <input type="text" id="price" name="price" class="form-control" value="<?=((isset($_POST['price']))?$_POST['price']:''); ?>">
+      <input type="text" id="price" name="price" class="form-control" value="<?=$price; ?>">
     </div>
     <!-- List price -->
     <div class="form-group col-md-3">
       <label for="list_price">List Price: </label>
-      <input type="text" id="list_price" name="list_price" class="form-control" value="<?=((isset($_POST['list_price']))?$_POST['list_price']:''); ?>">
+      <input type="text" id="list_price" name="list_price" class="form-control" value="<?=$list_price; ?>">
     </div>
-    <!-- Quantity and Size Button-->
     <div class="form-group col-md-3">
       <label>Quantity & sizes:</label>
       <button class="btn btn-default form-control" onclick="jQuery('#sizesModal').modal('toggle'); return false;">Quantity & Sizes</button>
     </div>
     <!-- Quantity and Size Text field -->
     <div class="form-group col-md-3">
-      <label for="sizes">Quantity and Sizes</label>
-      <input type="text" id="sizes" class="form-control" name="sizes" value="<?=((isset($_POST['sizes']))?$_POST['sizes']:''); ?>" readonly>
+      <label for="sizes">Quantity and Sizes*</label>
+      <input type="text" id="sizes" class="form-control" name="size" value="<?=$sizes; ?>" readonly>
     </div>
     <!-- Product Photo -->
     <div class="form-group col-md-6">
-      <label for="photo">Product Photo: </label>
-      <input type="file" id="photo" name="photo" class="form-control">
+        <?php if($saved_image != ''): ?>
+          <div class="saved-image"><img src="<?php echo $saved_image; ?>" alt ="saved image"/><br>
+          <a href="product.php?delete_image=1&edit=<?php echo $edit_id; ?>" class="text-danger">delete image</a>
+        </div>
+        <?php else: ?>
+        <label for="photo">Product Photo: </label>
+        <input type="file" id="photo" name="photo" class="form-control">
+      <?php endif; ?>
     </div>
     <!--DEcription  -->
     <div class="form-group col-md-6">
       <label for="description">Description: </label>
-      <textarea id="description" name="description" class="form-control" rows="6"><?=((isset($_POST['description']))?sanitize($_POST['description']):''); ?></textarea>
+      <textarea id="description" name="description" class="form-control" rows="6"><?=$description; ?></textarea>
     </div>
     <!-- ADD Button -->
     <div class="form-group pull-right">
@@ -241,8 +275,9 @@
 
       ?>
       <tr>
-        <td class="text-center"><a href="product.php?edit=<?=$product['id'];?>" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span></a>
-        <a href="product.php?delete =<?=$product['id'];?>" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span></a></td>
+        <td class="text-center">
+        <a href="product.php?edit=<?=$product['id'];?>" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span></a>
+        <a href="product.php?delete=<?=$product['id'];?>" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span></a></td>
         <td><?=$product['title'];?></td>
         <td><?=money($product['price']);?></td>
         <td><?=$category; ?></td>
@@ -255,3 +290,8 @@
   </tbody>
 </table>
 <?php }include 'includes/footer.php';?>
+<script>
+  jQuery('document').ready(fucntion(){
+    get_child_option('<?=$category; ?>');
+  });
+</script>
