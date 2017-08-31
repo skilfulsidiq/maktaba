@@ -283,7 +283,7 @@
         <td><?=$category; ?></td>
         <td><a href="product.php?featured=<?=(($product['featured'] == 0)?'1':'0');?>&id=<?=$product['id'];?>" class="btn btn-xs btn-primary">
         <span class="glyphicon glyphicon-<?=(($product['featured']== 1)?'minus':'plus'); ?>"></span></a>&nbsp<?=(($product['featured']== 1)?'Featured Product':'');?></td>
-        <td></td>
+        <td><?=$product['sold'];?></td>
       </tr>
 
     <?php endwhile; ?>

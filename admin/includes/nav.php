@@ -13,8 +13,9 @@
                     <ul class="nav navbar-nav">
                                  <!--                    MENU -->
                         <li><a href="brand.php">Brands</a></li>
-												<li>	<a href="categories.php">Categories</a></li>
-												<li>	<a href="product.php">Products</a></li>
+                        <li>	<a href="categories.php">Categories</a></li>
+                        <li>	<a href="product.php">Products</a></li>
+                        <li>	<a href="archived.php">Archived</a></li>
 
 
                     </ul>
