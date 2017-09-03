@@ -1,5 +1,8 @@
 <?php
   require_once $_SERVER['DOCUMENT_ROOT'].'/ecommerce/core/connect.php';
+  if(!is_logged_in()){
+        loggin_error_redirect();
+    }
   include 'includes/head.php';
   include 'includes/nav.php';
 

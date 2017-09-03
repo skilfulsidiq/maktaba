@@ -43,23 +43,23 @@ $size_array = explode(',',$sizestring);
                                 <div class="form-group">
                                     <div class="col-xs-3">
                                         <label for="quantity">Quantity</label>
-                                        <input type="text" class="form-control" id="quantity" name="quantity">
+                                        <input type="number" class="form-control" id="quantity" name="quantity" min='0'>
                                     </div>
-                                </div><br><br>
-                                    <div class="form-group">
-                                    <label for="size">Size</label>
+                                </div><br><br><br>
+                                <div class="form-group">
+                                <label for="size">Size</label>
                                     <select name="size" id="size" class="form-control">
                                         <option value="">Select Your Size</option>
                                         <?php
-                                          foreach ($size_array as $string) {
+                                        foreach ($size_array as $string) {
                                             $str_array = explode(':',$string);
                                             $size = $str_array[0];
                                             $quantity = $str_array[1];
-                                              echo '<option value="'.$size.'">'.$size.'  ('.$quantity.' Avaliable)</option>';# code...
-                                          }
+                                            echo '<option value="'.$size.'">'.$size.'  ('.$quantity.' Avaliable)</option>';# code...
+                                        }
                                         ?>
                                     </select>
-                                    </div>
+                                </div>
 
                                 </form>
                         </div>

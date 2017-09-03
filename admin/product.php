@@ -1,5 +1,8 @@
 <?php
   require_once $_SERVER['DOCUMENT_ROOT'].'/ecommerce/core/connect.php';
+  if(!is_logged_in()){
+        loggin_error_redirect();
+    }
   include 'includes/head.php';
   include 'includes/nav.php';
 
@@ -14,7 +17,7 @@
     //query to fecth brand
     $brandsql = $conn->query("SELECT * FROM brand ORDER BY brand");
     $parentsql = $conn->query("SELECT * FROM categories WHERE parent = 0");
-    //for edit
+    //for add
     $title = ((isset($_POST['title']) && $_POST['title'] != '' )?sanitize($_POST['title']):'');
     $brand = ((isset($_POST['brand']) && !empty($_POST['brand']))?sanitize($_POST['brand']):'');
     $parent = ((isset($_POST['parent']) && !empty($_POST['parent']))?sanitize($_POST['parent']):'');
@@ -68,7 +71,6 @@
     }
     //When Save Changes Button is clikced in the quantity and size modal
     if($_POST){
-      $dbpath = '';
       $errors=array();
       //form validation
       $required = array('title','brand','price','parent','child','size');
@@ -115,7 +117,9 @@
         echo display_error($errors);
       }else{
         //upload files and insert details
-        move_uploaded_file($location, $uploadPath);
+        if(!empty($_FILES)){
+          move_uploaded_file($location, $uploadPath);
+        }
         $insertsql = "INSERT INTO product(title,price,list_price,brand_id,category,image,description,size)
         VALUES('$title','$price','$list_price','$brand','$category','$dbpath','$description','$sizes')";
         if(isset($_GET['edit'])){

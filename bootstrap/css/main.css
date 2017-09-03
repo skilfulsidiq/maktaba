@@ -7,29 +7,47 @@
       position: relative;
       top: 30px;
       padding: 0;
-      margin: 10px;
-      /*      overflow: hidden;*/
-      height: 600px;
+      /* margin: 10px; */
+        /* overflow: hidden; */
+      height: 0px;
       background-repeat: no-repeat;
       background-size: cover;
       background-position: top-center;
       background-attachment: fixed;
   }
+    #headerPartial {
+        position: relative;
+        top: 30px;
+        padding: 0;
+        margin: 10px;
+        /*      overflow: hidden;*/
+        height: 80px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: top-center;
+        background-attachment: fixed;
+    }
   /*Carousel stylling*/
+  .caroslide{
+      width:50%;
+      margin:10px auto;
+  }
 
   #nav {
       height: 0px;
   }
 
   .caro {
-      height: 450px;
+      height: 300px;
   }
 
   .caro img {
-      width: 95%;
-      margin: 10px;
-      height: 400px;
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
   }
+  
   /*  product Img*/
 
   .img-pro {
@@ -41,10 +59,11 @@
       margin: 50px
   }
 
-  img.details {
-      width: 33%;
+
+img.details {
+      width: 99%;
       margin: 15px auto;
-  }
+  } 
   /*Admin styles*/
   /*Admin brand table*/
 

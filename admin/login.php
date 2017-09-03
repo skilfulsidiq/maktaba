@@ -2,10 +2,6 @@
   require_once $_SERVER['DOCUMENT_ROOT'].'/ecommerce/core/connect.php';
   include 'includes/head.php';
 
-//   $password = 'humble';
-//   $hashed = password_hash($password, PASSWORD_DEFAULT);
-//   echo $hashed;
-
     $email=((isset($_POST['email']))?sanitize($_POST['email']):'');
     $email = trim($email);
     $password=((isset($_POST['password']))?sanitize($_POST['password']):'');
@@ -16,7 +12,7 @@
 <style>
      #login-form{
       width:50%;
-      height:60%;
+      height:auto;
       background:#fff;
       border: 2px solid #000;
       box-shadow: 7px 7px 15px rgba(#000);
@@ -25,7 +21,7 @@
       padding:15px; 
      }
      body{
-         background-image:url("/ecommerce/images/other/background.jpg");
+         background-image:url("/ecommerce/images/other/pm3.jpg");
          background-size:100vw 100vh;
          background-attachment:fixed;
      }
@@ -64,7 +60,8 @@
                     echo display_error($errors);
                 }else{
                     //log in user
-                    echo "U";
+                    $user_id = $user['id'];
+                    login($user_id);
                 }
             
             ?>

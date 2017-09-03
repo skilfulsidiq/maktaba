@@ -2,7 +2,7 @@
 
     <div id="headerWrapper">
         
-         <div id="myCarousel" class="carousel slide" data-ride="carousel">
+         <div id="myCarousel" class="carousel slide caroslide" data-ride="carousel">
         <!-- Carousel indicators -->
             <ol class="carousel-indicators">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -11,14 +11,17 @@
             </ol>   
             <!-- Wrapper for carousel items -->
             <div class="carousel-inner">
-                <div class="item active caro">
-                    <img src="images/other/1.png" alt="First Slide">
+                <div class="item active caro slide">
+                    <img src="images/other/pm1.jpg" alt="First Slide">
                 </div>
-                <div class="item caro">
-                    <img src="images/other/2.png" alt="Second Slide">
+                <div class="item caro slide">
+                    <img src="images/other/pm2.jpg" alt="Second Slide">
                 </div>
-                <div class="item caro">
-                    <img src="images/other/3.png" alt="Third Slide">
+                <div class="item caro slide">
+                    <img src="images/other/pm4.jpg" alt="Third Slide">
+                </div>
+                <div class="item caro slide">
+                    <img src="images/other/pm5.jpg" alt="Third Slide">
                 </div>
             </div>
             <!-- Carousel controls -->
@@ -28,7 +31,7 @@
             <a class="carousel-control right" href="#myCarousel" data-slide="next">
                 <span class="glyphicon glyphicon-chevron-right"></span>
             </a>
-        </div>
+        </div> 
 
     </div>
     <div class="container-fluid"> <br><br>
