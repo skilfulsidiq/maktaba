@@ -30,6 +30,7 @@ $size_array = explode(',',$sizestring);
                     <div class="row">
                         <div class="col-sm-6 details">
                             <div class="center-block">
+                                <span class="bg-danger" id="modal_errors"></span>
                                 <img src="<?php echo $product['image']; ?>" alt="<?= $product['title']; ?>" class="details img-responsive" />
                             </div>
                         </div>
@@ -39,7 +40,9 @@ $size_array = explode(',',$sizestring);
                                 <hr>
                                 <p>Price: #<?php echo $product['price'];?></p>
                                 <p>Brand:<?php echo $brand['brand'];?> </p>
-                                <form action="add_cart.php" method="post">
+                                <form action="add_cart.php" method="post" id="add_product_form">
+                                    <input type="hidden" name="product_id" value="<?=$id;?>">
+                                <input type="hidden" name="available" id="available" value="">
                                 <div class="form-group">
                                     <div class="col-xs-3">
                                         <label for="quantity">Quantity</label>
@@ -54,8 +57,8 @@ $size_array = explode(',',$sizestring);
                                         foreach ($size_array as $string) {
                                             $str_array = explode(':',$string);
                                             $size = $str_array[0];
-                                            $quantity = $str_array[1];
-                                            echo '<option value="'.$size.'">'.$size.'  ('.$quantity.' Avaliable)</option>';# code...
+                                            $available = $str_array[1];
+                                            echo '<option value="'.$size.'" data-available="'.$available.'">'.$size.'  ('.$available.' Avaliable)</option>';# code...
                                         }
                                         ?>
                                     </select>
@@ -68,13 +71,17 @@ $size_array = explode(',',$sizestring);
                 </div>
                 <div class="modal-footer">
                 <button class="btn btn-default" onclick="closeModal()" data-dismiss="modal">Close</button>
-                    <button class="btn btn-warning" type="submit"><span class="glyphicon glyphicon-shopping-cart"></span>Add To Cart</button>
+                    <button class="btn btn-warning" onclick="add_to_cart();return false;"><span class="glyphicon glyphicon-shopping-cart"></span>Add To Cart</button>
                 </div>
             </div>
         </div>
 
     </div>
     <script>
+        jQuery('#size').change(function(){
+            var available = jQuery('#size option:selected').data("available");
+            jQuery('#available').val(available);
+        });
       function closeModal(){
         jQuery('#details-modal').modal('hide');
         setTimeout(function(){

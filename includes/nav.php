@@ -34,7 +34,7 @@ $query = $conn->query($sql);
                             </ul>
                         </li>
                         <?php endwhile; ?>
-												<li><a href="admin/index.php">Admin</a></li>
+						<li><a href="cart.php"><span class="glyphicon glyphicon-shopping-cart"></span> My Cart</a></li>
                     </ul>
                 </div>
 			</div>

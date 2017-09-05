@@ -1,0 +1,7 @@
+{
+  "require": {
+    "mabiola/paystack-php-lib": "~0.1",
+    "moontoast/math": "^1.1"
+  }
+ 
+}
