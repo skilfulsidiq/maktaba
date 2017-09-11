@@ -29,7 +29,7 @@
                 method: 'POST',
                 data: data,
                 success: function(){location.reload();},
-                error: function(){alert("something went wrong");},
+                error: function(){alert("something went wrong");}
             });
         }
         //add to cart function

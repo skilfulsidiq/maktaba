@@ -58,7 +58,9 @@ $size_array = explode(',',$sizestring);
                                             $str_array = explode(':',$string);
                                             $size = $str_array[0];
                                             $available = $str_array[1];
+                                            if($available > 0){
                                             echo '<option value="'.$size.'" data-available="'.$available.'">'.$size.'  ('.$available.' Avaliable)</option>';# code...
+                                            }
                                         }
                                         ?>
                                     </select>

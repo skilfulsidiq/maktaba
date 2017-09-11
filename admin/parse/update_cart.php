@@ -40,7 +40,7 @@
   //if updated item is empty
   if(empty($updated_item)){
       $conn->query("DELETE FROM cart WHERE id ='{$cart_id}'");
-      setcookie(CART_COOKIE,'',1,'/',$domain,false);
+      setcookie(CART_COOKIE,'',1,"/",$domain,false);
   }
 
 

@@ -67,5 +67,24 @@ function permission_error_redirect($url = 'login.php'){
     return $category;
  }
 
+ function sizesToArray($string){
+   $sizeArray = explode(',',$string);
+   $returnArray = array();
+   foreach($sizeArray as $size){
+     $s = explode(':',$size);
+     $returnArray[]= array('size'=> $s[0],'quantity' =>$s[1]);
+   }
+   return $returnArray;
+ }
+
+ function sizesToString($sizes){
+   $sizeString = '';
+   foreach($sizes as $size){
+     $sizeString = $size['size'].':'.$size['quantity'].',';
+   }
+   $trimmed = rtrim($sizeString,',');
+   return $trimmed;
+ }
+
 
 ?>

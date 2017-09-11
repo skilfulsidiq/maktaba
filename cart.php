@@ -16,6 +16,9 @@
 
        
     }
+    // if(isset($_POST['checkoutbtn'])){
+    //     header('location:thankyou.php');
+    // }
     
 ?>
 <div class="col-md-12">
@@ -111,6 +114,11 @@
                     <div class="row">
                         <form action="thankyou.php" method="post" id="payment-form">
                             <span class="bg-danger" id="payment-error"></span>
+                            <input type="hidden" name="tax" value="<?=$tax;?>">
+                            <input type="hidden" name="sub_total" value="<?=$sub_total;?>">
+                            <input type="hidden" name="grand_total" value="<?=$grand_total;?>">
+                            <input type="hidden" name="cart_id" value="<?=$cart_id;?>">
+                            <input type="hidden" name="description" value="<?=$item_count.' item'.(($item_count > 1)?'s':'').'from Maktaba Store.' ;?>">
                             <div id="step1" style="display:block">
                                 <div class="form-group col-md-6">
                                     <label for="full_name">Full Name:</label>
@@ -138,38 +146,59 @@
                                 </div>
                             </div>
                             <div id="step2" style="display:none">
-                                <div class="form-group col-md-3">
-                                    <label for="name">Name On Card:</label>
-                                    <input type="text" id="name" class="form-control">
+                                <div class="form-group col-md-12">
+                                    <!-- <form action="" method="post"> -->
+                                        <fieldset>
+                                            <div class="form-group  col-md-4">
+                                                <label for="cod">Cash on Delivery:</label>
+                                                <input type="radio" id="cod" name="radio" value="cod1" class="form-control">
+                                            </div>
+                                            <div class="form-group  col-md-4">
+                                                <label for="op">Online Payment:</label>
+                                                <input type="radio" id="op" name="radio" value="op1" class="form-control">
+                                            </div>
+                                           
+                                        </fieldset>
+                                    <!-- </form> -->
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <label for="number">Card Number:</label>
-                                    <input type="text" id="number" class="form-control">
+                                <div id="cod1" class="cod1 desc" style="display:none;">
+                                    <h3 class="text-center text-primary">Cash on Delivery Selected</h3>
                                 </div>
-                                <div class="form-group col-md-2">
-                                    <label for="cvc">CVC:</label>
-                                    <input type="text" id="cvc" class="form-control">
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="exp_month">Expire Month:</label>
-                                    <select  id="exp_month" class="form-control">
-                                        <option value=""></option>
-                                        <?php for($i=1; $i <13; $i++):?>
-                                        <option value="<?=$i;?>"><?php echo $i; ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                                 <div class="form-group col-md-2">
-                                    <label for="exp_year">Expire year:</label>
-                                    <select  id="exp_year" class="form-control">
-                                        <option value=""></option>
-                                        <?php 
-                                        $yr = date("Y");
-                                        for($i=0; $i <11; $i++):?>
-                                        <option value="<?=$yr +$i;?>"><?php echo $yr+$i; ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
+                                <div id="op1" class="op1 desc" style="display:none;">
+                                        <h3><h3 class="text-center text-primary">Enter Your Card Details</h3>
+                                        <div class="form-group col-md-3">
+                                            <label for="name">Name On Card:</label>
+                                            <input type="text" id="name" class="form-control">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="number">Card Number:</label>
+                                            <input type="text" id="number" class="form-control">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="cvc">CVC:</label>
+                                            <input type="text" id="cvc" class="form-control">
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="exp_month">Expire Month:</label>
+                                            <select  id="exp_month" class="form-control">
+                                                <option value=""></option>
+                                                <?php for($i=1; $i <13; $i++):?>
+                                                <option value="<?=$i;?>"><?php echo $i; ?></option>
+                                                <?php endfor; ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="exp_year">Expire year:</label>
+                                            <select  id="exp_year" class="form-control">
+                                                <option value=""></option>
+                                                <?php 
+                                                $yr = date("Y");
+                                                for($i=0; $i <11; $i++):?>
+                                                <option value="<?=$yr +$i;?>"><?php echo $yr+$i; ?></option>
+                                                <?php endfor; ?>
+                                            </select>
+                                        </div>
+                                    </div>
                             </div>
                     </div>
                 </div>
@@ -177,7 +206,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-info" onclick ="back_address();" id="back_btn"style="display:none;"><span class="glyphicon glyphicon-backward"></span> Back </button>
                     <button type="button" class="btn btn-primary" onclick ="check_address();" id= "next_btn">Next <span class="glyphicon glyphicon-forward"></span></button>
-                    <button type="submit" class="btn btn-success" id ="checkout_btn" style="display:none;"><span class="glyphicon glyphicon-shopping-cart"></span> Check Out</button>
+                    <button type="submit" name = "checkoutbtn" class="btn btn-success" id ="checkout_btn" style="display:none;"><span class="glyphicon glyphicon-shopping-cart"></span> Check Out</button>
                     </form>
                 </div>
                 </div>
@@ -220,13 +249,22 @@
                     jQuery('#next_btn').css("display","none");
                     jQuery('#back_btn').css("display","inline-block");
                     jQuery('#checkout_btn').css("display","inline-block");
-                    jQuery('#checkoutModalLabel').html("Enter your Card Details");
+                    jQuery('#checkoutModalLabel').html("Select Your Payment Method");
 
                 }
             },
             error:function(){alert("something went wrong");}
         });
     }
+    //Payment method selection
+    jQuery(document).ready(function(){
+        $('input[type="radio"]').click(function(){
+            var inputvalue = $(this).attr("value");
+            var targetBox = $("." + inputvalue);
+            $(".desc").not(targetBox).hide();
+            $(targetBox).show();
+        });
+    });
 </script>
 
 <?php include 'includes/footer.php'; ?>
