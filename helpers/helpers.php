@@ -61,7 +61,7 @@ function permission_error_redirect($url = 'login.php'){
             FROM categories c
             INNER JOIN categories p
             ON c.parent = p.id
-            WHERE c.id = $id";
+            WHERE c.id = '$id'";
     $query = $conn->query($sql);
     $category = mysqli_fetch_assoc($query);
     return $category;

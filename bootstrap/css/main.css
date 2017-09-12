@@ -80,4 +80,10 @@ img.details {
       width:100px;
       height: auto;
   }
+  #cart_widget td{
+      font-size: 12px;
+  }
 
+  input.price-range{
+      width:55px;
+  }

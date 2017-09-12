@@ -45,8 +45,8 @@
         $title = ((isset($_POST['title']) && $_POST['title'] != '' )?sanitize($_POST['title']):$product['title']);
         $brand = ((isset($_POST['brand']) && $_POST['brand'] != '' )?sanitize($_POST['brand']):$product['brand_id']);
         $price = ((isset($_POST['price']) && $_POST['price'] !='')?sanitize($_POST['price']):$product['price']);
-        $list_price = ((isset($_POST['list_price']) && $_POST['list_price'] !='')?sanitize($_POST['list_price']):$product['list_price']);
-        $description = ((isset($_POST['description']) && $_POST['description'] !='')?sanitize($_POST['description']):$product['description']);
+        $list_price = ((isset($_POST['list_price']))?sanitize($_POST['list_price']):$product['list_price']);
+        $description = ((isset($_POST['description']))?sanitize($_POST['description']):$product['description']);
         $sizes = ((isset($_POST['size']) && $_POST['size'] != '' )?sanitize($_POST['size']):$product['size']);
         $sizes = rtrim($sizes,',');
         $saved_image = (($product['image'] !='')?$product['image']:'');
@@ -82,8 +82,8 @@
         }
       }
       //file upload validation
-    if(!empty($_FILES)){
-       // var_dump($_FILES);
+    if($_FILES['photo']['name']){
+       var_dump($_FILES);
         $photo= $_FILES['photo'];
         $name = $photo['name'];
         $nameArray = explode('.',$name);

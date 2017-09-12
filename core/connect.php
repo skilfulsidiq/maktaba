@@ -12,7 +12,7 @@ if(mysqli_connect_error()){
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'].'/ecommerce/config.php';
 require_once BASEURL.'helpers/helpers.php';
-require BASEURL.'vendor/autoload.php';
+// require BASEURL.'vendor/autoload.php';
 
 //set id for th cart
 $cart_id = '';
